@@ -8,6 +8,9 @@ function isEmpty(obj) {
 }
 
 const handler = async (req, res) => {
+try{
+  
+  console.log('init');
   const ad_number = req.query.adno;
   const pswd = req.query.pswd || "GCET123";
   if (!ad_number) {
@@ -15,22 +18,22 @@ const handler = async (req, res) => {
   } else {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-
-    await page.goto("https://gu.icloudems.com");
+    await page.goto("https://gu.icloudems.com/corecampus/index.php", {timeout: 0});
 
     await page.waitForSelector("#useriid");
     await page.focus("#useriid");
     await page.keyboard.type(ad_number);
-
+    
     await page.waitForSelector("#actlpass");
     await page.focus("#actlpass");
     await page.keyboard.type(pswd);
-
-    await page.waitForTimeout(1500);
-
+    
+    await page.waitForTimeout(1000);
+    
     await (await page.$("#psslogin")).press("Enter"); // Enter Key
-
-    await page.waitForTimeout(1500);
+    
+    console.log('logged in');
+    await page.waitForTimeout(2000);
 
     if (
       page
@@ -40,22 +43,23 @@ const handler = async (req, res) => {
       res.status(400).send("Invalid Login Credentials");
     else {
       await page.goto(
-        "https://gu.icloudems.com/corecampus/student/attendance/subwise_attendace_new.php"
+        "https://gu.icloudems.com/corecampus/student/attendance/subwise_attendace_new.php",
+        { timeout: 0 }
       );
       //
-      await page.waitForTimeout(1500);
+      await page.waitForTimeout(2000);
 
       //await page.click("#select2-acadyear-container")
       //await (await page.$('.select2-selection__rendered')).press('Enter'); // Enter Key
       //await (await page.$('#select2-acadyear-result-npqk-2021-2022')).press('Enter'); // Enter Key
 
       await page.select("#acadyear", "2021-2022");
-      await page.waitForTimeout(1500);
+      await page.waitForTimeout(2000);
       await page.select("#classid", "2816");
-      await page.waitForTimeout(1500);
+      await page.waitForTimeout(1000);
       await (await page.$("#getattendance")).press("Enter"); // Enter Key
 
-      await page.waitForTimeout(2500);
+      await page.waitForTimeout(2000);
 
       const result = await page.$$eval(".table tr", (rows) => {
         return Array.from(rows, (row) => {
@@ -118,11 +122,16 @@ const handler = async (req, res) => {
       let metadata = { name, dp };
       final.push({ metadata });
 
-      res.send(final);
-      await browser.close();
+      res.status(200).send({ response: final });
     }
     await browser.close();
   }
+}
+catch(e){
+  console.log(e);
+  res.status(500).send({ error: e });
+}
+
 };
 
 export default handler;

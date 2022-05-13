@@ -8,8 +8,6 @@ function isEmpty(obj) {
 }
 
 const handler = async (req, res) => {
-try{
-  
   console.log('init');
   const ad_number = req.query.adno;
   const pswd = req.query.pswd || "GCET123";
@@ -126,11 +124,6 @@ try{
     }
     await browser.close();
   }
-}
-catch(e){
-  console.log(e);
-  res.status(500).send({ error: e });
-}
 
 };
 

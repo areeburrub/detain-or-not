@@ -8,7 +8,6 @@ function isEmpty(obj) {
 }
 
 const handler = async (req, res) => {
-  console.log('init');
   const ad_number = req.query.adno;
   const pswd = req.query.pswd || "GCET123";
   if (!ad_number) {
@@ -30,7 +29,6 @@ const handler = async (req, res) => {
     
     await (await page.$("#psslogin")).press("Enter"); // Enter Key
     
-    console.log('logged in');
     await page.waitForTimeout(2000);
 
     if (

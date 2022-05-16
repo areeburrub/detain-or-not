@@ -1,10 +1,25 @@
 import puppeteer from "puppeteer";
+import Chromium from "chrome-aws-lambda";
 
 function isEmpty(obj) {
   for (let key in obj) {
     if (obj[key] !== null && obj[key] !== "") return false;
   }
   return true;
+}
+
+function getBrowserInstance() {
+  const executablePath = await Chromium.executablePath;
+  if (!executablePath) {
+    return puppeteer.launch({headless: false});
+  }
+  return Chromium.puppeteer.launch({
+    args: Chromium.args,
+    defaultViewport: Chromium.defaultViewport,
+    executablePath,
+    headless: Chromium.headless,
+    ignoreHTTPSErrors: true
+  });
 }
 
 const handler = async (req, res) => {
@@ -14,7 +29,7 @@ const handler = async (req, res) => {
     res.status(400).send({ error: "Admission number is not found!" });
   } else {
     // const browser = await puppeteer.launch({ headless: false });
-    const browser = await puppeteer.launch();
+    const browser = await getBrowserInstance();
     const page = await browser.newPage();
     await page.goto("https://gu.icloudems.com/corecampus/index.php", {timeout: 0});
 

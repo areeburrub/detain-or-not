@@ -1,4 +1,4 @@
-import { puppeteer } from "puppeteer-core";
+const puppeteer = require("puppeteer-core");
 const chrome = require("chrome-aws-lambda");
 
 function isEmpty(obj) {
@@ -7,7 +7,6 @@ function isEmpty(obj) {
   }
   return true;
 }
-
 
 const handler = async (req, res) => {
   const ad_number = req.query.adno;
@@ -22,24 +21,26 @@ const handler = async (req, res) => {
       headless: chrome.headless,
     });
     const page = await browser.newPage();
-    await page.goto("https://gu.icloudems.com/corecampus/index.php", {timeout: 0});
+    await page.goto("https://gu.icloudems.com/corecampus/index.php", {
+      timeout: 0,
+    });
 
     await page.waitForSelector("#useriid");
     await page.focus("#useriid");
     await page.keyboard.type(ad_number);
-    
+
     await page.waitForSelector("#actlpass");
     await page.focus("#actlpass");
     await page.keyboard.type(pswd);
-    
+
     await page.waitForTimeout(1000);
-    
+
     await (await page.$("#psslogin")).press("Enter"); // Enter Key
-    
+
     await page.waitForTimeout(2000);
 
     if (
-      page 
+      page
         .url()
         .includes("errormessage=Invalid+Username+or+Password.Please+try+again.")
     )
@@ -129,7 +130,6 @@ const handler = async (req, res) => {
     }
     await browser.close();
   }
-
 };
 
 export default handler;

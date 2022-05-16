@@ -1551,6 +1551,24 @@
     "unbzip2-stream" "1.4.3"
     "ws" "8.6.0"
 
+"puppeteer@^14.1.0":
+  "integrity" "sha512-T3eB4f6k9HVttYvyy8drGIKb04M+vxhepqM7qqcVCBTNT3T6M9cUaJT4k7P+a6wSonObJSJUP98JkPDQG+3fJw=="
+  "resolved" "https://registry.npmjs.org/puppeteer/-/puppeteer-14.1.0.tgz"
+  "version" "14.1.0"
+  dependencies:
+    "cross-fetch" "3.1.5"
+    "debug" "4.3.4"
+    "devtools-protocol" "0.0.982423"
+    "extract-zip" "2.0.1"
+    "https-proxy-agent" "5.0.1"
+    "pkg-dir" "4.2.0"
+    "progress" "2.0.3"
+    "proxy-from-env" "1.1.0"
+    "rimraf" "3.0.2"
+    "tar-fs" "2.1.1"
+    "unbzip2-stream" "1.4.3"
+    "ws" "8.6.0"
+
 "queue-microtask@^1.2.2":
   "integrity" "sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A=="
   "resolved" "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz"

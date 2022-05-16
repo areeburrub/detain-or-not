@@ -8,7 +8,7 @@ function isEmpty(obj) {
   return true;
 }
 
-function getBrowserInstance() {
+const  getBrowserInstance = async() => {
   const executablePath = await Chromium.executablePath;
   if (!executablePath) {
     return puppeteer.launch({headless: false});

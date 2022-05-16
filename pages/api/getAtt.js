@@ -13,6 +13,7 @@ const handler = async (req, res) => {
   if (!ad_number) {
     res.status(400).send({ error: "Admission number is not found!" });
   } else {
+    // const browser = await puppeteer.launch({ headless: false });
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto("https://gu.icloudems.com/corecampus/index.php", {timeout: 0});
@@ -32,7 +33,7 @@ const handler = async (req, res) => {
     await page.waitForTimeout(2000);
 
     if (
-      page
+      page 
         .url()
         .includes("errormessage=Invalid+Username+or+Password.Please+try+again.")
     )

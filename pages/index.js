@@ -11,12 +11,21 @@ export default function Home() {
 
   const getAttendance = async (adno, pswd) => {
     // Equivalent to `axios.get('https://httpbin.org/get?answer=42')`
-    const res = await Axios.get("/api/getAtt", {
-      params: { adno: adno, pswd: pswd } 
-    });
+    console.log(adno, pswd)
+    // const res = await Axios.get("http://127.0.0.1:5000/api/", {
+    //   params: { adno: adno, pswd: pswd } 
+    // });
 
-    console.log(res.data);
-    setData(res.data);
+    // console.log(res.data);
+    // setData(res.data);
+    await fetch(`/api/getAtt?adno=${adno }${pswd?'&pswd='+pswd:''}`)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        setData(res);
+      }
+      );
+
   };
   
   useEffect(() => {

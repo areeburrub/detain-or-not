@@ -1,4 +1,5 @@
-import chromium from "chrome-aws-lambda";
+import { Puppeteer } from "puppeteer-core";
+const chrome = require("chrome-aws-lambda");
 
 function isEmpty(obj) {
   for (let key in obj) {
@@ -7,26 +8,6 @@ function isEmpty(obj) {
   return true;
 }
 
-const  getBrowserInstance = async() => {
-  const executablePath = await chromium.executablePath;
-
-  if (!executablePath) {
-    const puppeteer = require("puppeteer");
-    return puppeteer.launch({headless: false});
-  }
-
-  return chromium.puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: {
-      width: 1280,
-      height: 720,
-    },
-    executablePath,
-    headless: chromium.headless,
-    ignoreHTTPSErrors: true,
-  });
-
-}
 
 const handler = async (req, res) => {
   const ad_number = req.query.adno;
@@ -35,7 +16,11 @@ const handler = async (req, res) => {
     res.status(400).send({ error: "Admission number is not found!" });
   } else {
     // const browser = await puppeteer.launch({ headless: false });
-    const browser = await getBrowserInstance();
+    const browser = await Puppeteer.launch({
+      args: chrome.args,
+      executablePath: await chrome.executablePath,
+      headless: chrome.headless,
+    });
     const page = await browser.newPage();
     await page.goto("https://gu.icloudems.com/corecampus/index.php", {timeout: 0});
 

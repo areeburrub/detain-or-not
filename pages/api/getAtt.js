@@ -19,6 +19,7 @@ const handler = async (req, res) => {
       args: chrome.args,
       executablePath: await chrome.executablePath,
       headless: chrome.headless,
+      ignoreDefaultArgs: ["--disable-extensions"],
     });
     const page = await browser.newPage();
     await page.goto("https://gu.icloudems.com/corecampus/index.php", {

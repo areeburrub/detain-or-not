@@ -1,4 +1,4 @@
-import { Puppeteer } from "puppeteer-core";
+import { puppeteer } from "puppeteer-core";
 const chrome = require("chrome-aws-lambda");
 
 function isEmpty(obj) {
@@ -16,7 +16,7 @@ const handler = async (req, res) => {
     res.status(400).send({ error: "Admission number is not found!" });
   } else {
     // const browser = await puppeteer.launch({ headless: false });
-    const browser = await Puppeteer.launch({
+    const browser = await puppeteer.launch({
       args: chrome.args,
       executablePath: await chrome.executablePath,
       headless: chrome.headless,

@@ -3,8 +3,6 @@ import Image from 'next/image'
 import { toast } from 'react-toastify';
 import styles from '../styles/Home.module.css'
 import { useEffect, useState } from 'react'
-import { Axios } from 'axios';
-
 export default function Home() {
 
   const [data, setData] = useState({})

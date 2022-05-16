@@ -14,7 +14,7 @@ const  getBrowserInstance = async() => {
     const puppeteer = require("puppeteer");
     return puppeteer.launch({headless: false});
   }
-  
+
   return chromium.puppeteer.launch({
     args: chromium.args,
     defaultViewport: {

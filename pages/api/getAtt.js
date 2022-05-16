@@ -1,5 +1,4 @@
-import puppeteer from "puppeteer";
-import Chromium from "chrome-aws-lambda";
+import chromium from "chrome-aws-lambda";
 
 function isEmpty(obj) {
   for (let key in obj) {
@@ -9,17 +8,24 @@ function isEmpty(obj) {
 }
 
 const  getBrowserInstance = async() => {
-  const executablePath = await Chromium.executablePath;
+  const executablePath = await chromium.executablePath;
+
   if (!executablePath) {
+    const puppeteer = require("puppeteer");
     return puppeteer.launch({headless: false});
   }
-  return Chromium.puppeteer.launch({
-    args: Chromium.args,
-    defaultViewport: Chromium.defaultViewport,
+  
+  return chromium.puppeteer.launch({
+    args: chromium.args,
+    defaultViewport: {
+      width: 1280,
+      height: 720,
+    },
     executablePath,
-    headless: Chromium.headless,
-    ignoreHTTPSErrors: true
+    headless: chromium.headless,
+    ignoreHTTPSErrors: true,
   });
+
 }
 
 const handler = async (req, res) => {

@@ -57,7 +57,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <form onSubmit={(e)=>{handleSubmit(e)}}>
+        <form onSubmit={(e)=>{handleSubmit(e)}} className={styles.form}>
           <input type="text" placeholder="Enter your admission number" value={Adno} onChange={(e) => {setAdno(e.target.value); setDownloading(false)}} />
           <input type="text" placeholder="Enter your password" value={pswd} onChange={(e)=>{setPswd(e.target.value)}}/>
           <input type="submit" value="Submit" />

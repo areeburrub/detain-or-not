@@ -7,7 +7,14 @@
   justify-content: center;
   align-items: center;
 }
-
+.form{
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .attCard{
   width: 90vw;
   max-width: 600px;

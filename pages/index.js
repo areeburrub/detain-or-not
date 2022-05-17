@@ -66,7 +66,6 @@ export default function Home() {
           data.map((item, index) => {
             return (
               <div key={index} className={styles.attCard}>
-                <h1>{item.serial_number}</h1>
                 <h2>{item.name}</h2>
                 <h2>{item.classes}</h2>
                 <h2>{item.percentage}%</h2>

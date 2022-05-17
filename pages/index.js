@@ -32,7 +32,7 @@ export default function Home() {
     e.preventDefault();
     if(!downloading){
       toast.promise(
-        getAttendance(Adno),
+        getAttendance(Adno,pswd),
         {
           pending: "Downloading your Attendance ...",
           success: "Attendance Updated",

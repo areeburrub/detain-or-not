@@ -5,11 +5,14 @@ import styles from '../styles/Home.module.css'
 import { useEffect, useState } from 'react'
 export default function Home() {
 
-  const [data, setData] = useState({})
+  const [data, setData] = useState([])
+  const [Adno, setAdno] = useState("21GCEB")
+  const [pswd, setPswd] = useState("GCET123")
+  const [downloading, setDownloading] = useState(false)
 
   const getAttendance = async (adno, pswd) => {
+    setDownloading(true)
     // Equivalent to `axios.get('https://httpbin.org/get?answer=42')`
-    console.log(adno, pswd)
     // const res = await Axios.get("http://127.0.0.1:5000/api/", {
     //   params: { adno: adno, pswd: pswd } 
     // });
@@ -20,22 +23,28 @@ export default function Home() {
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
-        setData(res);
-      }
-      );
+        setData(res.response);
+        setDownloading(false)
+      })
+  };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(!downloading){
+      toast.promise(
+        getAttendance(Adno),
+        {
+          pending: "Downloading your Attendance ...",
+          success: "Attendance Updated",
+          error: "Some error occured, Retry",
+        },
+        { toastId: "customId" }
+      );
+    }
   };
   
   useEffect(() => {
-    toast.promise(
-      getAttendance("21GCEBAI021"),
-      {
-        pending: "Downloading your Attendance ...",
-        success: "Attendance Updated",
-        error: "Some error occured, Retry",
-      },
-      { toastId: "customId" }
-    );
+
   }, [])
   
 
@@ -48,7 +57,23 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-       Data = {JSON.stringify(data)}
+        <form onSubmit={(e)=>{handleSubmit(e)}}>
+          <input type="text" placeholder="Enter your admission number" value={Adno} onChange={(e) => {setAdno(e.target.value); setDownloading(false)}} />
+          <input type="text" placeholder="Enter your password" value={pswd} onChange={(e)=>{setPswd(e.target.value)}}/>
+          <input type="submit" value="Submit" />
+        </form>
+        {
+          data.map((item, index) => {
+            return (
+              <div key={index} className={styles.attCard}>
+                <h1>{item.serial_number}</h1>
+                <h2>{item.name}</h2>
+                <h2>{item.classes}</h2>
+                <h2>{item.percentage}%</h2>
+              </div>
+            );
+          })
+        }
       </main>
 
     </div>

@@ -16,7 +16,7 @@ export default function Home() {
 
     // console.log(res.data);
     // setData(res.data);
-    await fetch(`/api/getAtt?adno=${adno }${pswd?'&pswd='+pswd:''}`)
+    await fetch(`https://detain-api.herokuapp.com/attendance?adno=${adno }${pswd?'&pswd='+pswd:''}`)
       .then((res) => res.json())
       .then((res) => {
         console.log(res);

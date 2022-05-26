@@ -43,9 +43,19 @@ export default function Home() {
     }
   };
   
+  const [Total, setTotal] = useState(0)
+  const [Total_present, setTotal_present] = useState(0)
+  
   useEffect(() => {
-
-  }, [])
+    if(data.length > 0){
+      const tot = data[data.length - 2].total_classes;
+      //use as delimiter and seperate 2 digits oftotal classes
+      const total = tot.split("/")[1];
+      const present = tot.split("/")[0];
+      setTotal(total)
+      setTotal_present(present)
+    }  
+  }, [data])
   
 
   return (
@@ -63,11 +73,20 @@ export default function Home() {
           <input type="submit" value="Submit" />
         </form>
         {
+          (Total_present/Total)*100 < 75 &&
+        <div className={styles.attCard}>
+          <h2>
+            You have attended {Total_present} classes out of {Total} have to attend {3*Total - 4*Total_present} more classes to get above 75%
+          </h2>
+        </div>
+        }
+        {
           data.map((item, index) => {
             return (
               <div key={index} className={styles.attCard}>
                 <h2>{item.name}</h2>
                 <h2>{item.classes}</h2>
+                <h2>{item.total_classes}</h2>
                 <h2>{item.percentage}%</h2>
               </div>
             );

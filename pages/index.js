@@ -2,14 +2,32 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { toast } from 'react-toastify';
 import styles from '../styles/Home.module.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useReducer } from 'react'
 export default function Home() {
 
   const [data, setData] = useState([])
   const [Adno, setAdno] = useState("21GCEB")
   const [pswd, setPswd] = useState("GCET123")
   const [downloading, setDownloading] = useState(false)
+  const [loggedin, setLoggedin] = useState(false)
+  
+  
+  
+  const [logins, setLogins] = useState([]);
+  if (typeof window !== 'undefined') {
+  const localData = localStorage.getItem("logins");
 
+
+  useEffect(() => {
+    localStorage.setItem('logins', JSON.stringify(logins));
+  }, [logins]);
+
+  useEffect(()=>{
+    setLoggedin(false)
+    setLogins(localData ? JSON.parse(localData) : [])
+  },[])
+  
+}
   const getAttendance = async (adno, pswd) => {
     setDownloading(true)
     // Equivalent to `axios.get('https://httpbin.org/get?answer=42')`
@@ -25,14 +43,18 @@ export default function Home() {
         console.log(res);
         setData(res.response);
         setDownloading(false)
+        setLoggedin(true)
       })
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const initLogin = (item) => {
+    console.log(item)
+    setAdno(item.Adno)
+    setPswd(item.Pswd)
+    console.log(downloading)
     if(!downloading){
       toast.promise(
-        getAttendance(Adno,pswd),
+        getAttendance(item.Adno,item.pswd),
         {
           pending: "Downloading your Attendance ...",
           success: "Attendance Updated",
@@ -40,7 +62,33 @@ export default function Home() {
         },
         { toastId: "customId" }
       );
-    }
+  }
+}
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+        if (!downloading) {
+          toast.promise(
+            getAttendance(Adno, pswd),
+            {
+              pending: "Downloading your Attendance ...",
+              success: "Attendance Updated",
+              error: "Some error occured, Retry",
+            },
+            { toastId: "customId" }
+          );
+          //add details to login array if it doesn't exist
+          if (logins.findIndex((x) => x.Adno == Adno) == -1) {
+            setLogins([...logins, { Adno: Adno, Pswd: pswd }]);
+          } else if (logins.findIndex((x) => x.Adno == Adno) != -1) {
+            //update details if it exists
+            setLogins(
+              logins.map((x) =>
+                x.Adno == Adno ? { Adno: Adno, Pswd: pswd } : x
+              )
+            );
+          }
+        }
   };
   
   const [Total, setTotal] = useState(0)
@@ -56,7 +104,7 @@ export default function Home() {
       setTotal_present(present)
     }  
   }, [data])
-  
+ 
 
   return (
     <div className={styles.container}>
@@ -72,6 +120,23 @@ export default function Home() {
           <input type="text" placeholder="Enter your password" value={pswd} onChange={(e)=>{setPswd(e.target.value)}}/>
           <input type="submit" value="Submit" />
         </form>
+
+        {
+          !loggedin &&
+          <div className={styles.logins}>
+            <h1>Recently used</h1>
+            {
+                logins.map((item, index) => {
+                  return (
+                      <div key={index} className={styles.loginCard}>
+                        <h2>{item.Adno}</h2>
+                        <button onClick={()=>{initLogin(item);}}>Login</button>
+                      </div>
+                  );}) 
+            }
+          </div>
+        }
+
         {
           (Total_present/Total)*100 < 75 &&
         <div className={styles.attCard}>

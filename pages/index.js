@@ -54,7 +54,7 @@ export default function Home() {
     console.log(downloading)
     if(!downloading){
       toast.promise(
-        getAttendance(item.Adno,item.pswd),
+        getAttendance(item.Adno,item.Pswd),
         {
           pending: "Downloading your Attendance ...",
           success: "Attendance Updated",

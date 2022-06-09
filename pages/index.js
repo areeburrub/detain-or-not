@@ -173,7 +173,7 @@ export default function Home() {
                 if you miss <span style={{color:"orange"}}>{ExtraDays}</span>  classes and take sanctioned leave for  <span style={{color:"lightgreen"}}>{Leaves}</span> classes
               </h2>
               <h2>
-                then have to attend <span style={{color:"blue"}}>
+                then you have to attend <span style={{color:"blue"}}>
                 {3 * (parseInt(Total)+parseInt(ExtraDays)) - 4 * (parseInt(Total_present)+parseInt(Leaves))}</span> more classes
               </h2>
               <h2>to get above 75%</h2>
@@ -182,16 +182,22 @@ export default function Home() {
               <div className={styles.control}>
                 <h4>Enter number of classes you are planning to miss</h4>
                 <input type="number" value={ExtraDays} onChange={(e) => {
-                  if(e.target.value>=0){
-                    setExtraDays(e.target.value)
+                  if (
+                    e.target.value >= 0 
+                  ) {
+                    setExtraDays(e.target.value);
                   }
                   }} />
               </div>
               <div className={styles.control}>
-                <h4>Enter number of classes for which you will get you attendace marked</h4>
+                <h4>Enter number of classes for which you will get your attendace marked</h4>
                 <input type="number" value={Leaves} onChange={(e) => {
+                  
                   if(e.target.value>=0){
                     setLeaves(e.target.value)
+                  }
+                  if((parseInt(3 * (parseInt(Total) + parseInt(ExtraDays)) - 4 * (parseInt(Total_present) + parseInt(Leaves))) ) <= 0){
+                    setLeaves(Leaves-1)
                   }
                   }} />
               </div>

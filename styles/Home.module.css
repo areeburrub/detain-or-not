@@ -45,3 +45,22 @@
   height: 40px;
   margin: auto 0;
 }
+
+.control{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 20px 0;
+  padding: 5px 10px;
+  outline: #000 solid 2px;
+}
+
+.control h4{
+  margin: 2px 0;
+}
+.control input{
+  font-size: 3ch;
+  width:100px;
+}

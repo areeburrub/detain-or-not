@@ -11,8 +11,10 @@ export default function Home() {
   const [downloading, setDownloading] = useState(false)
   const [loggedin, setLoggedin] = useState(false)
   
-  
-  
+  const [ExtraDays, setExtraDays] = useState(0)
+  const [Leaves, setLeaves] = useState(0)
+
+
   const [logins, setLogins] = useState([]);
   if (typeof window !== 'undefined') {
   const localData = localStorage.getItem("logins");
@@ -115,50 +117,98 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <form onSubmit={(e)=>{handleSubmit(e)}} className={styles.form}>
-          <input type="text" placeholder="Enter your admission number" value={Adno} onChange={(e) => {setAdno(e.target.value); setDownloading(false)}} />
-          <input type="text" placeholder="Enter your password" value={pswd} onChange={(e)=>{setPswd(e.target.value)}}/>
+        <form
+          onSubmit={(e) => {
+            handleSubmit(e);
+          }}
+          className={styles.form}
+        >
+          <input
+            type="text"
+            placeholder="Enter your admission number"
+            value={Adno}
+            onChange={(e) => {
+              setAdno(e.target.value);
+              setDownloading(false);
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Enter your password"
+            value={pswd}
+            onChange={(e) => {
+              setPswd(e.target.value);
+            }}
+          />
           <input type="submit" value="Submit" />
         </form>
 
-        {
-          !loggedin &&
+        {!loggedin && (
           <div className={styles.logins}>
             <h1>Recently used</h1>
-            {
-                logins.map((item, index) => {
-                  return (
-                      <div key={index} className={styles.loginCard}>
-                        <h2>{item.Adno}</h2>
-                        <button onClick={()=>{initLogin(item);}}>Login</button>
-                      </div>
-                  );}) 
-            }
+            {logins.map((item, index) => {
+              return (
+                <div key={index} className={styles.loginCard}>
+                  <h2>{item.Adno}</h2>
+                  <button
+                    onClick={() => {
+                      initLogin(item);
+                    }}
+                  >
+                    Login
+                  </button>
+                </div>
+              );
+            })}
           </div>
-        }
+        )}
 
-        {
-          (Total_present/Total)*100 < 75 &&
-        <div className={styles.attCard}>
-          <h2>
-            You have attended {Total_present} classes out of {Total} have to attend {3*Total - 4*Total_present} more classes to get above 75%
-          </h2>
-        </div>
-        }
-        {
-          data.map((item, index) => {
-            return (
-              <div key={index} className={styles.attCard}>
-                <h2>{item.name}</h2>
-                <h2>{item.classes}</h2>
-                <h2>{item.total_classes}</h2>
-                <h2>{item.percentage}%</h2>
+        {(Total_present / Total) * 100 < 75 && (
+          <>
+            <div className={styles.attCard}>
+              <h2>
+                You have attended <span style={{color:"red"}}>{Total_present}</span> classes out of <span style={{color:"green"}}>{Total}</span> 
+              </h2>
+              <h2>
+                if you miss <span style={{color:"orange"}}>{ExtraDays}</span>  classes and take sanctioned leave for  <span style={{color:"lightgreen"}}>{Leaves}</span> classes
+              </h2>
+              <h2>
+                then have to attend <span style={{color:"blue"}}>
+                {3 * (parseInt(Total)+parseInt(ExtraDays)) - 4 * (parseInt(Total_present)+parseInt(Leaves))}</span> more classes
+              </h2>
+              <h2>to get above 75%</h2>
+            </div>
+            <div className={styles.attCard}>
+              <div className={styles.control}>
+                <h4>Enter number of classes you are planning to miss</h4>
+                <input type="number" value={ExtraDays} onChange={(e) => {
+                  if(e.target.value>=0){
+                    setExtraDays(e.target.value)
+                  }
+                  }} />
               </div>
-            );
-          })
-        }
+              <div className={styles.control}>
+                <h4>Enter number of classes for which you will get you attendace marked</h4>
+                <input type="number" value={Leaves} onChange={(e) => {
+                  if(e.target.value>=0){
+                    setLeaves(e.target.value)
+                  }
+                  }} />
+              </div>
+            </div>
+          </>
+        )}
+        {data.map((item, index) => {
+          return (
+            <div key={index} className={styles.attCard}>
+              <h2>{item.name}</h2>
+              <h2>{item.classes}</h2>
+              <h2>{item.total_classes}</h2>
+              <h2>{item.percentage}%</h2>
+            </div>
+          );
+        })}
       </main>
-
     </div>
-  )
+  );
 }

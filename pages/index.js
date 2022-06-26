@@ -11,6 +11,9 @@ export default function Home() {
   const [downloading, setDownloading] = useState(false)
   const [loggedin, setLoggedin] = useState(false)
   
+
+  const [percenReq, setPercenReq] = useState(75)
+
   const [ExtraDays, setExtraDays] = useState(0)
   const [Leaves, setLeaves] = useState(0)
 
@@ -167,39 +170,76 @@ export default function Home() {
           <>
             <div className={styles.attCard}>
               <h2>
-                You have attended <span style={{color:"red"}}>{Total_present}</span> classes out of <span style={{color:"green"}}>{Total}</span> 
+                You have attended{" "}
+                <span style={{ color: "red" }}>{Total_present}</span> classes
+                out of <span style={{ color: "green" }}>{Total}</span>
               </h2>
               <h2>
-                if you miss <span style={{color:"orange"}}>{ExtraDays}</span>  classes and take sanctioned leave for  <span style={{color:"lightgreen"}}>{Leaves}</span> classes
+                if you miss <span style={{ color: "orange" }}>{ExtraDays}</span>{" "}
+                classes and take sanctioned leave for{" "}
+                <span style={{ color: "lightgreen" }}>{Leaves}</span> classes
               </h2>
               <h2>
-                then you have to attend <span style={{color:"blue"}}>
-                {3 * (parseInt(Total)+parseInt(ExtraDays)) - 4 * (parseInt(Total_present)+parseInt(Leaves))}</span> more classes
+                then you have to attend{" "}
+                <span style={{ color: "blue" }}>
+                  {parseInt((Total_present - ((parseInt(percenReq)/100)*Total))/((parseInt(percenReq)/100)-1))}
+                </span>{" "}
+                more classes
+                {/* {3 * (parseInt(Total)+parseInt(ExtraDays)) - 4 * (parseInt(Total_present)+parseInt(Leaves))}</span> more classes */}
               </h2>
-              <h2>to get above 75%</h2>
+              <h2>to get above {percenReq}</h2>
             </div>
             <div className={styles.attCard}>
               <div className={styles.control}>
                 <h4>Enter number of classes you are planning to miss</h4>
-                <input type="number" value={ExtraDays} onChange={(e) => {
-                  if (
-                    e.target.value >= 0 
-                  ) {
-                    setExtraDays(e.target.value);
-                  }
-                  }} />
+                <input
+                  disabled
+                  type="number"
+                  value={ExtraDays}
+                  onChange={(e) => {
+                    if (e.target.value >= 0) {
+                      setExtraDays(e.target.value);
+                    }
+                  }}
+                />
               </div>
               <div className={styles.control}>
-                <h4>Enter number of classes for which you will get your attendace marked</h4>
-                <input type="number" value={Leaves} onChange={(e) => {
-                  
-                  if(e.target.value>=0){
-                    setLeaves(e.target.value)
-                  }
-                  if((parseInt(3 * (parseInt(Total) + parseInt(ExtraDays)) - 4 * (parseInt(Total_present) + parseInt(Leaves))) ) <= 0){
-                    setLeaves(Leaves-1)
-                  }
-                  }} />
+                <h4>
+                  Enter number of classes for which you will get your attendace
+                  marked
+                </h4>
+                <input
+                  disabled
+                  type="number"
+                  value={Leaves}
+                  onChange={(e) => {
+                    if (e.target.value >= 0) {
+                      setLeaves(e.target.value);
+                    }
+                    if (
+                      parseInt(
+                        3 * (parseInt(Total) + parseInt(ExtraDays)) -
+                          4 * (parseInt(Total_present) + parseInt(Leaves))
+                      ) <= 0
+                    ) {
+                      setLeaves(Leaves - 1);
+                    }
+                  }}
+                />
+              </div>
+
+              <div className={styles.control}>
+                <h4>Enter target percentage</h4>
+                <input
+                  type="number"
+                  value={percenReq}
+                  onChange={(e) => {
+                    if (e.target.value >= 0 && e.target.value <= 100) {
+                      setPercenReq(e.target.value);
+          
+                    }
+                  }}
+                />
               </div>
             </div>
           </>

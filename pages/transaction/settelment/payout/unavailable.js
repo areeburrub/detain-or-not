@@ -29,15 +29,15 @@ const Unavailable = () => {
 
   const [visible, setVisible] = useState(false);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setVisible(true);
-      // window.open("/trax342.mp4", "_blank");
-      router.push("/trax342.mp4");
-    }
-    , 4000);
-  }
-  , [])
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setVisible(true);
+  //     // window.open("/trax342.mp4", "_blank");
+      
+  //   }
+  //   , 4000);
+  // }
+  // , [])
 
 
   const videoComponent = () => {
@@ -55,10 +55,11 @@ const Unavailable = () => {
   return (
     <div className={styles.FailMain}>
       <h1>Sorry, this service is Not Available for a while</h1>
-      <motion.div initial="hidden" animate="visible" variants={hidden}>
-        <h1>Btw You are Rick Rolled</h1>
-      </motion.div>
-      {visible && videoComponent()}
+      <h1>to know more <a href="https://youtu.be/dQw4w9WgXcQ">click here</a></h1>
+      {/* <motion.div initial="hidden" animate="visible" variants={hidden}>
+        <h1>K</h1>
+      </motion.div> */}
+      {/* {visible && videoComponent()} */}
     </div>
   );
 }

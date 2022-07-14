@@ -3,6 +3,8 @@ import Image from 'next/image'
 import { toast } from 'react-toastify';
 import styles from '../styles/Home.module.css'
 import { useEffect, useState, useReducer } from 'react'
+import RickRoll from '../src/components/rickroll';
+
 export default function Home() {
 
   const [data, setData] = useState([])
@@ -146,7 +148,7 @@ export default function Home() {
           <input type="submit" value="Submit" />
         </form>
 
-        {!loggedin && (
+        {loggedin && (
           <div className={styles.logins}>
             <h1>Recently used</h1>
             {logins.map((item, index) => {
@@ -189,6 +191,7 @@ export default function Home() {
               </h2>
               <h2>to get above {percenReq}</h2>
             </div>
+            <RickRoll/>
             <div className={styles.attCard}>
               <div className={styles.control}>
                 <h4>Enter number of classes you are planning to miss</h4>

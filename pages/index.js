@@ -35,7 +35,7 @@ export default function Home() {
       setLogins(localData ? JSON.parse(localData) : []);
     }, []);
   }
-  
+
   const getAttendance = async (adno, pswd) => {
     setDownloading(true)
     // Equivalent to `axios.get('https://httpbin.org/get?answer=42')`
@@ -149,7 +149,7 @@ export default function Home() {
           <input type="submit" value="Submit" />
         </form>
 
-        {loggedin && (
+        {!loggedin && (
           <div className={styles.logins}>
             <h1>Recently used</h1>
             {logins.map((item, index) => {

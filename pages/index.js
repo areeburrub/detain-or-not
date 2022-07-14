@@ -22,19 +22,20 @@ export default function Home() {
 
   const [logins, setLogins] = useState([]);
   if (typeof window !== 'undefined') {
-  const localData = localStorage.getItem("logins");
+    const localData = localStorage.getItem("logins");
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      localStorage.setItem("logins", JSON.stringify(logins));
+    }, [logins]);
 
-  useEffect(() => {
-    localStorage.setItem('logins', JSON.stringify(logins));
-  }, [logins]);
-
-  useEffect(()=>{
-    setLoggedin(false)
-    setLogins(localData ? JSON.parse(localData) : [])
-  },[])
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      setLoggedin(false);
+      setLogins(localData ? JSON.parse(localData) : []);
+    }, []);
+  }
   
-}
   const getAttendance = async (adno, pswd) => {
     setDownloading(true)
     // Equivalent to `axios.get('https://httpbin.org/get?answer=42')`

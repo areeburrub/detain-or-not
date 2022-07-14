@@ -2,9 +2,11 @@ import React from 'react'
 import { motion } from 'framer-motion';
 import styles from "../../../../styles/RickRoll.module.css"
 import { useState, useEffect,useRef } from 'react';
+import { useRouter } from "next/router";
 
 const Unavailable = () => {
 
+  const router = useRouter();
   const videoRef = useRef();
 
   const hidden = {
@@ -30,9 +32,10 @@ const Unavailable = () => {
   useEffect(() => {
     setTimeout(() => {
       setVisible(true);
-      window.open("/trax342.mp4", "_blank");
+      // window.open("/trax342.mp4", "_blank");
+      router.push("/trax342.mp4");
     }
-    , 3000);
+    , 4000);
   }
   , [])
 

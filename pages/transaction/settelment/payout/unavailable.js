@@ -44,9 +44,9 @@ const Unavailable = () => {
         height="380"
         src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
         title="Rick Astley - Never Gonna Give You Up (Official Music Video)"
-        frameborder="0"
+        frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
+        allowFullScreen
       ></iframe>
     );
   }

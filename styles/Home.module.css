@@ -57,6 +57,7 @@
 }
 .form .profileCard img{
   width: 50%;
+  height: 50%;
   height: auto;
   border-radius: 50%;
   box-shadow: 0px 0px 10px #8f8f8f;

@@ -6,6 +6,8 @@ import { useEffect, useState, useReducer } from 'react'
 import RickRoll from '../src/components/rickroll';
 import Navbar from '../src/components/navbar/navbar';
 import Footer from '../src/components/footer/footer';
+import ProgressBar from "@ramonak/react-progress-bar";
+
 
 export default function Home() {
 
@@ -219,89 +221,91 @@ export default function Home() {
           </div>
         )}
 
-        {(Total_present / Total) * 100 < 75 && (
-          <>
-            <div className={styles.attCard}>
-              <h2>
-                You have attended{" "}
-                <span style={{ color: "red" }}>{Total_present}</span> classes
-                out of <span style={{ color: "green" }}>{Total}</span>
-              </h2>
-              <h2>
-                if you miss <span style={{ color: "orange" }}>{ExtraDays}</span>{" "}
-                classes and take sanctioned leave for{" "}
-                <span style={{ color: "lightgreen" }}>{Leaves}</span> classes
-              </h2>
-              <h2>
-                then you have to attend{" "}
-                <span style={{ color: "blue" }}>
-                  {
+        <div className={styles.attCard}>
+          <h1>Your attendance is {parseFloat((Total_present / Total)*100).toFixed(2)}%</h1>
+          <ProgressBar completed={parseFloat((Total_present / Total)*100).toFixed(2)} />
+          <h1></h1>
+        </div>
 
-                    //(PercentRequired(Missed+TotalClasses)-100(Leaves+Attended))/(100-PercetRequired)
-                    parseInt(((percenReq*(ExtraDays+Total))-(100*(Leaves+Total_present)))/(100-percenReq))
+        <div className={styles.attCard}>
+          <h2>
+            You have attended{" "}
+            <span style={{ color: "red" }}>{Total_present}</span> classes
+            out of <span style={{ color: "green" }}>{Total}</span>
+          </h2>
+          <h2>
+            if you miss <span style={{ color: "orange" }}>{ExtraDays}</span>{" "}
+            classes and take sanctioned leave for{" "}
+            <span style={{ color: "lightgreen" }}>{Leaves}</span> classes
+          </h2>
+          <h2>
+            then you have to attend{" "}
+            <span style={{ color: "blue" }}>
+              {
 
-                  }
-                </span>{" "}
-                more classes
-                {/* {3 * (parseInt(Total)+parseInt(ExtraDays)) - 4 * (parseInt(Total_present)+parseInt(Leaves))}</span> more classes */}
-              </h2>
-              <h2>to get above {percenReq}</h2>
-            </div>
-            <RickRoll />
-            <div className={styles.attCard}>
-              <div className={styles.control}>
-                <h4>Enter number of classes you are planning to miss</h4>
-                <input
-                  
-                  type="number"
-                  value={ExtraDays}
-                  onChange={(e) => {
-                    if (e.target.value >= 0) {
-                      setExtraDays(parseInt(e.target.value));
-                    }
-                  }}
-                />
-              </div>
-              <div className={styles.control}>
-                <h4>
-                  Enter number of classes for which you will get your attendace
-                  marked
-                </h4>
-                <input
-                  
-                  type="number"
-                  value={Leaves}
-                  onChange={(e) => {
-                    if (e.target.value >= 0) {
-                      setLeaves(parseInt(e.target.value));
-                    }
-                    if (
-                      parseInt(
-                        3 * (Total + ExtraDays) -
-                          4 * (Total_present + Leaves)
-                      ) <= 0
-                    ) {
-                      setLeaves(Leaves - 1);
-                    }
-                  }}
-                />
-              </div>
+                //(PercentRequired(Missed+TotalClasses)-100(Leaves+Attended))/(100-PercetRequired)
+                parseInt(((percenReq*(ExtraDays+Total))-(100*(Leaves+Total_present)))/(100-percenReq))
 
-              <div className={styles.control}>
-                <h4>Enter target percentage</h4>
-                <input
-                  type="number"
-                  value={percenReq}
-                  onChange={(e) => {
-                    if (e.target.value >= 0 && e.target.value <= 100) {
-                      setPercenReq(e.target.value);
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          </>
-        )}
+              }
+            </span>{" "}
+            more classes
+            {/* {3 * (parseInt(Total)+parseInt(ExtraDays)) - 4 * (parseInt(Total_present)+parseInt(Leaves))}</span> more classes */}
+          </h2>
+          <h2>to get above {percenReq}</h2>
+        </div>
+        <RickRoll />
+        <div className={styles.attCard}>
+          <div className={styles.control}>
+            <h4>Enter number of classes you are planning to miss</h4>
+            <input
+              
+              type="number"
+              value={ExtraDays}
+              onChange={(e) => {
+                if (e.target.value >= 0) {
+                  setExtraDays(parseInt(e.target.value));
+                }
+              }}
+            />
+          </div>
+          <div className={styles.control}>
+            <h4>
+              Enter number of classes for which you will get your attendace
+              marked
+            </h4>
+            <input
+              
+              type="number"
+              value={Leaves}
+              onChange={(e) => {
+                if (e.target.value >= 0) {
+                  setLeaves(parseInt(e.target.value));
+                }
+                if (
+                  parseInt(
+                    3 * (Total + ExtraDays) -
+                      4 * (Total_present + Leaves)
+                  ) <= 0
+                ) {
+                  setLeaves(Leaves - 1);
+                }
+              }}
+            />
+          </div>
+
+          <div className={styles.control}>
+            <h4>Enter target percentage</h4>
+            <input
+              type="number"
+              value={percenReq}
+              onChange={(e) => {
+                if (e.target.value >= 0 && e.target.value <= 100) {
+                  setPercenReq(e.target.value);
+                }
+              }}
+            />
+          </div>
+        </div>
         {data.map((item, index) => {
           return (
             <div key={index} className={styles.attCard}>

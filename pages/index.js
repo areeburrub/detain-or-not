@@ -221,6 +221,9 @@ export default function Home() {
           </div>
         )}
 
+            {
+              loggedin && (
+                <>
         <div className={styles.attCard}>
           <h1>Your attendance is {parseFloat((Total_present / Total)*100).toFixed(2)}%</h1>
           <ProgressBar completed={parseFloat((Total_present / Total)*100).toFixed(2)} />
@@ -303,7 +306,7 @@ export default function Home() {
                   setPercenReq(e.target.value);
                 }
               }}
-            />
+              />
           </div>
         </div>
         {data.map((item, index) => {
@@ -316,6 +319,8 @@ export default function Home() {
             </div>
           );
         })}
+        </>)
+    }
         <Footer />
       </main>
     </div>

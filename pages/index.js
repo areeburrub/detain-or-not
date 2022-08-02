@@ -4,15 +4,20 @@ import { toast } from 'react-toastify';
 import styles from '../styles/Home.module.css'
 import { useEffect, useState, useReducer } from 'react'
 import RickRoll from '../src/components/rickroll';
+import Navbar from '../src/components/navbar/navbar';
+import Footer from '../src/components/footer/footer';
 
 export default function Home() {
 
   const [data, setData] = useState([])
+  const [metadata, setMetadata] = useState({})
+  const [attData, setAttData] = useState({})
+  
   const [Adno, setAdno] = useState("21GCEB")
   const [pswd, setPswd] = useState("GCET123")
   const [downloading, setDownloading] = useState(false)
   const [loggedin, setLoggedin] = useState(false)
-  
+  const [formOpen, setFormOpen] = useState(true)
 
   const [percenReq, setPercenReq] = useState(75)
 
@@ -21,6 +26,9 @@ export default function Home() {
 
 
   const [logins, setLogins] = useState([]);
+
+  const [loginBorderColor, setLoginBorderColor] = useState("#000")
+
   if (typeof window !== 'undefined') {
     const localData = localStorage.getItem("logins");
 
@@ -36,31 +44,69 @@ export default function Home() {
     }, []);
   }
 
+  const AddtoLocalStorage = () => {
+    //add details to login array if it doesn't exist
+    if (logins.findIndex((x) => x.Adno == Adno) == -1) {
+      setLogins([...logins, { Adno: Adno, Pswd: pswd }]);
+    } else if (logins.findIndex((x) => x.Adno == Adno) != -1) {
+      //update details if it exists
+      setLogins(
+        logins.map((x) => (x.Adno == Adno ? { Adno: Adno, Pswd: pswd } : x))
+      );
+    }
+  }
   const getAttendance = async (adno, pswd) => {
-    setDownloading(true)
-    // Equivalent to `axios.get('https://httpbin.org/get?answer=42')`
-    // const res = await Axios.get("http://127.0.0.1:5000/api/", {
-    //   params: { adno: adno, pswd: pswd } 
-    // });
+    setDownloading(true);
 
-    // console.log(res.data);
-    // setData(res.data);
-    await fetch(`https://detain-api.herokuapp.com/attendance?adno=${adno }${pswd?'&pswd='+pswd:''}`)
+    //api adapted from https://github.com/imprakharshukla/attendance_monitor
+    await fetch(
+      `https://detain-api.herokuapp.com/attendance?adno=${adno}${
+        pswd ? "&pswd=" + pswd : ""
+      }`
+    )
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
-        setData(res.response);
-        setDownloading(false)
-        setLoggedin(true)
+        HandelResponse(res.response);
+        setDownloading(false);
+        setLoggedin(true);
+        setLoginBorderColor("#27b018");
+        setFormOpen(false);
+        AddtoLocalStorage();
       })
+      .catch((err) => {
+        setDownloading(false);
+        setLoggedin(false);
+        setLoginBorderColor("red");
+        throw err;
+      });
   };
 
+  const HandelResponse = (data) => {
+    const Response = data;
+    //trim last 2 elements from the response
+    const ClassesData = Response.slice(0, -2);
+    setData(ClassesData);
+
+    //last element is metadata
+    const Metadata = Response[Response.length - 1].metadata;
+    setMetadata({name: Metadata.name[0],Image: Metadata.dp});
+    
+    //second last element is attendance data
+    const AttData = Response[Response.length - 2];
+    setAttData(AttData);
+
+  }
+
+
+  // for recently logged in
   const initLogin = (item) => {
     console.log(item)
     setAdno(item.Adno)
     setPswd(item.Pswd)
     console.log(downloading)
     if(!downloading){
+      setLoginBorderColor("#000");
       toast.promise(
         getAttendance(item.Adno,item.Pswd),
         {
@@ -76,26 +122,7 @@ export default function Home() {
   const handleSubmit = (e) => {
     e.preventDefault();
         if (!downloading) {
-          toast.promise(
-            getAttendance(Adno, pswd),
-            {
-              pending: "Downloading your Attendance ...",
-              success: "Attendance Updated",
-              error: "Some error occured, Retry",
-            },
-            { toastId: "customId" }
-          );
-          //add details to login array if it doesn't exist
-          if (logins.findIndex((x) => x.Adno == Adno) == -1) {
-            setLogins([...logins, { Adno: Adno, Pswd: pswd }]);
-          } else if (logins.findIndex((x) => x.Adno == Adno) != -1) {
-            //update details if it exists
-            setLogins(
-              logins.map((x) =>
-                x.Adno == Adno ? { Adno: Adno, Pswd: pswd } : x
-              )
-            );
-          }
+          initLogin({ Adno, pswd });
         }
   };
   
@@ -104,52 +131,75 @@ export default function Home() {
   
   useEffect(() => {
     if(data.length > 0){
-      const tot = data[data.length - 2].total_classes;
+      const tot = attData.total_classes;
       //use as delimiter and seperate 2 digits oftotal classes
       const total = tot.split("/")[1];
       const present = tot.split("/")[0];
-      setTotal(total)
-      setTotal_present(present)
+      setTotal(parseInt(total))
+      setTotal_present(parseInt(present))
     }  
-  }, [data])
+  }, [attData])
  
 
   return (
     <div className={styles.container}>
       <Head>
         <title>Deatain || !</title>
-        <meta name="description" content="Generated by create next app" />
+        <meta
+          name="description"
+          content="Analyse your Attendance instantly from Galgotias ERP"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
+        <Navbar />
         <form
           onSubmit={(e) => {
             handleSubmit(e);
           }}
           className={styles.form}
+          style={{ border:`${loginBorderColor} solid 5px`}}
         >
-          <input
-            type="text"
-            placeholder="Enter your admission number"
-            value={Adno}
-            onChange={(e) => {
-              setAdno(e.target.value);
-              setDownloading(false);
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Enter your password"
-            value={pswd}
-            onChange={(e) => {
-              setPswd(e.target.value);
-            }}
-          />
-          <input type="submit" value="Submit" />
-        </form>
+          {
+            loggedin &&(
+            <>
+            <div className={styles.profileCard}>
+              <img src={metadata.Image} alt="profile" className={styles.img} />
+              {metadata.name}
+            </div>
+            <button type="button" onClick={(e)=>{ setFormOpen(!formOpen);}}>{formOpen?"close":"login another"}</button>
+            </>
+            )
+          }
+          {
+            formOpen && (
+              <>
+              <lable>Admission ID</lable>
+              <input
+              type="text"
+              placeholder="Enter your admission number"
+              value={Adno}
+              onChange={(e) => {
+                setAdno(e.target.value);
+                setDownloading(false);
+              }}
+            />
+            <lable>ERP Password</lable>
+            <input
+              type="text"
+              placeholder="Enter your password"
+              value={pswd}
+              onChange={(e) => {
+                setPswd(e.target.value);
+              }}
+              />
+              <input type="submit" value="Submit" />
+              </>
+            )}
+          </form>
 
-        {!loggedin && (
+        {!loggedin && logins.length>0 && (
           <div className={styles.logins}>
             <h1>Recently used</h1>
             {logins.map((item, index) => {
@@ -185,24 +235,29 @@ export default function Home() {
               <h2>
                 then you have to attend{" "}
                 <span style={{ color: "blue" }}>
-                  {parseInt((Total_present - ((parseInt(percenReq)/100)*Total))/((parseInt(percenReq)/100)-1))}
+                  {
+
+                    //(PercentRequired(Missed+TotalClasses)-100(Leaves+Attended))/(100-PercetRequired)
+                    parseInt(((percenReq*(ExtraDays+Total))-(100*(Leaves+Total_present)))/(100-percenReq))
+
+                  }
                 </span>{" "}
                 more classes
                 {/* {3 * (parseInt(Total)+parseInt(ExtraDays)) - 4 * (parseInt(Total_present)+parseInt(Leaves))}</span> more classes */}
               </h2>
               <h2>to get above {percenReq}</h2>
             </div>
-            <RickRoll/>
+            <RickRoll />
             <div className={styles.attCard}>
               <div className={styles.control}>
                 <h4>Enter number of classes you are planning to miss</h4>
                 <input
-                  disabled
+                  
                   type="number"
                   value={ExtraDays}
                   onChange={(e) => {
                     if (e.target.value >= 0) {
-                      setExtraDays(e.target.value);
+                      setExtraDays(parseInt(e.target.value));
                     }
                   }}
                 />
@@ -213,17 +268,17 @@ export default function Home() {
                   marked
                 </h4>
                 <input
-                  disabled
+                  
                   type="number"
                   value={Leaves}
                   onChange={(e) => {
                     if (e.target.value >= 0) {
-                      setLeaves(e.target.value);
+                      setLeaves(parseInt(e.target.value));
                     }
                     if (
                       parseInt(
-                        3 * (parseInt(Total) + parseInt(ExtraDays)) -
-                          4 * (parseInt(Total_present) + parseInt(Leaves))
+                        3 * (Total + ExtraDays) -
+                          4 * (Total_present + Leaves)
                       ) <= 0
                     ) {
                       setLeaves(Leaves - 1);
@@ -240,7 +295,6 @@ export default function Home() {
                   onChange={(e) => {
                     if (e.target.value >= 0 && e.target.value <= 100) {
                       setPercenReq(e.target.value);
-          
                     }
                   }}
                 />
@@ -258,6 +312,7 @@ export default function Home() {
             </div>
           );
         })}
+        <Footer />
       </main>
     </div>
   );

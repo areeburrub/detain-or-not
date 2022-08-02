@@ -55,7 +55,10 @@ const Unavailable = () => {
   return (
     <div className={styles.FailMain}>
       <h1>Sorry, this service is Not Available for a while</h1>
-      <h1>to know more <a href="https://youtu.be/dQw4w9WgXcQ">click here</a></h1>
+      <h1>
+        see this explaination to{" "}
+        <a href="https://youtu.be/dQw4w9WgXcQ">know more</a>
+      </h1>
       {/* <motion.div initial="hidden" animate="visible" variants={hidden}>
         <h1>K</h1>
       </motion.div> */}

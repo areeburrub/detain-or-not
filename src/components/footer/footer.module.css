@@ -1,0 +1,22 @@
+.footer{
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.footer .logo{
+  font-size: 1.5ch;
+  
+}
+.footer .logo a{
+  font-weight:600;
+}
+.footer .logo a:hover{
+  color:blue;
+}
+
+.footer .logo .heart{ 
+  color:red;
+  vertical-align: middle;
+  font-size: 2ch;
+}

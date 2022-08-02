@@ -1,20 +1,68 @@
 .main {
   min-height: 100vh;
-  padding: 4rem 0;
+  padding:  4rem 0 0 0 ;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
+
 .form{
-  width: 100%;
+  width:70%;
   max-width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border: #000 solid 5px;
+  padding:50px 20px;
+  border-radius:20px;
 }
+
+.form input{
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: #000 solid 1px;
+  border-radius: 5px;
+  font-size:2ch;
+}
+
+.form input[type="Submit"]{
+  width: 100%;
+  padding: 10px;
+  margin-top: 30px;
+  border: #000 solid 1px;
+  border-radius: 5px;
+  font-size:2ch;
+  cursor:pointer;
+  border:solid #000 1.5px;
+}
+
+.form input[type="Submit"]:hover{
+  border:solid #ccc 1.5px;
+}
+
+.form .profileCard{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 2ch;
+  font-weight: 500;
+}
+.form .profileCard img{
+  width: 50%;
+  height: auto;
+  border-radius: 50%;
+  box-shadow: 0px 0px 10px #8f8f8f;
+  margin-bottom: 10px;
+}
+
 .attCard{
   width: 90vw;
   max-width: 600px;
@@ -44,6 +92,7 @@
   width: 80px;
   height: 40px;
   margin: auto 0;
+  cursor: pointer;
 }
 
 .control{

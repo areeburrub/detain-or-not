@@ -61,11 +61,7 @@ export default function Home() {
     setDownloading(true);
 
     //api adapted from https://github.com/imprakharshukla/attendance_monitor
-    await fetch(
-      `https://detain-api.herokuapp.com/attendance?adno=${adno}${
-        pswd ? "&pswd=" + pswd : ""
-      }`
-    )
+    await fetch(`https://detain-api.herokuapp.com/attendance?adno=${adno}${pswd ? "&pswd=" + pswd : ""}`)
       .then((res) => res.json())
       .then((res) => {
         console.log(res);

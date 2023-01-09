@@ -15,8 +15,8 @@ export default function Home() {
   const [metadata, setMetadata] = useState({})
   const [attData, setAttData] = useState({})
   
-  const [Adno, setAdno] = useState("21GCEB")
-  const [pswd, setPswd] = useState("GCET123")
+  const [admissionNumber, setadmissionNumber] = useState("21GCEB")
+  const [pswd, setpswd] = useState("GCET123")
   const [downloading, setDownloading] = useState(false)
   const [loggedin, setLoggedin] = useState(false)
   const [formOpen, setFormOpen] = useState(true)
@@ -48,20 +48,21 @@ export default function Home() {
 
   const AddtoLocalStorage = () => {
     //add details to login array if it doesn't exist
-    if (logins.findIndex((x) => x.Adno == Adno) == -1) {
-      setLogins([...logins, { Adno: Adno, Pswd: pswd }]);
-    } else if (logins.findIndex((x) => x.Adno == Adno) != -1) {
+    if (logins.findIndex((x) => x.admissionNumber == admissionNumber) == -1) {
+      setLogins([...logins, { admissionNumber: admissionNumber, pswd: pswd }]);
+    } else if (logins.findIndex((x) => x.admissionNumber == admissionNumber) != -1) {
       //update details if it exists
       setLogins(
-        logins.map((x) => (x.Adno == Adno ? { Adno: Adno, Pswd: pswd } : x))
+        logins.map((x) => (x.admissionNumber == admissionNumber ? { admissionNumber: admissionNumber, pswd: pswd } : x))
       );
     }
   }
-  const getAttendance = async (adno, pswd) => {
+  const getAttendance = async (admissionNumber, pswd) => {
     setDownloading(true);
+    console.log(admissionNumber, pswd);
 
     //api adapted from https://github.com/imprakharshukla/attendance_monitor
-    await fetch(`https://detain-api.herokuapp.com/attendance?adno=${adno}${pswd ? "&pswd=" + pswd : ""}`)
+    await fetch(`https://detain-api.herokuapp.com/attendance?adno=${admissionNumber}${pswd ? "&pswd=" + pswd : ""}`)
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
@@ -100,13 +101,13 @@ export default function Home() {
   // for recently logged in
   const initLogin = (item) => {
     console.log(item)
-    setAdno(item.Adno)
-    setPswd(item.Pswd)
+    setadmissionNumber(item.admissionNumber)
+    setpswd(item.pswd)
     console.log(downloading)
     if(!downloading){
       setLoginBorderColor("#000");
       toast.promise(
-        getAttendance(item.Adno,item.Pswd),
+        getAttendance(item.admissionNumber,item.pswd),
         {
           pending: "Downloading your Attendance ...",
           success: "Attendance Updated",
@@ -120,7 +121,7 @@ export default function Home() {
   const handleSubmit = (e) => {
     e.preventDefault();
         if (!downloading) {
-          initLogin({ Adno, pswd });
+          initLogin({ admissionNumber, pswd });
         }
   };
   
@@ -177,9 +178,9 @@ export default function Home() {
               <input
               type="text"
               placeholder="Enter your admission number"
-              value={Adno}
+              value={admissionNumber}
               onChange={(e) => {
-                setAdno(e.target.value);
+                setadmissionNumber(e.target.value);
                 setDownloading(false);
               }}
             />
@@ -189,7 +190,7 @@ export default function Home() {
               placeholder="Enter your password"
               value={pswd}
               onChange={(e) => {
-                setPswd(e.target.value);
+                setpswd(e.target.value);
               }}
               />
               <input type="submit" value="Submit" />
@@ -203,7 +204,7 @@ export default function Home() {
             {logins.map((item, index) => {
               return (
                 <div key={index} className={styles.loginCard}>
-                  <h2>{item.Adno}</h2>
+                  <h2>{item.admissionNumber}</h2>
                   <button
                     onClick={() => {
                       initLogin(item);
